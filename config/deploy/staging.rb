@@ -3,7 +3,8 @@
 # Defines a single server with a list of roles and multiple properties.
 # You can define all roles on a single server, or split them:
 
-# server 'example.com', user: 'deploy', roles: %w{app db web}, my_property: :my_value
+server '10.5.3.204', user: 'ror', roles: %w{app db}#, my_property: :my_value
+#server '10.5.3.203', user: 'ror', roles: %w{app db web}#, my_property: :my_value
 # server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
 # server 'db.example.com', user: 'deploy', roles: %w{db}
 
@@ -17,9 +18,9 @@
 # property set. Specify the username and a domain or IP for the server.
 # Don't use `:all`, it's a meta role.
 
-# role :app, %w{deploy@example.com}, my_property: :my_value
-# role :web, %w{user1@primary.com user2@additional.com}, other_property: :other_value
-# role :db,  %w{deploy@example.com}
+#role :app, %w{ror@10.5.3.204 ror@10.5.3.203}, my_property: :my_value
+#role :web, %w{user1@primary.com user2@additional.com}, other_property: :other_value
+#role :db,  %w{deploy@example.com}
 
 
 
@@ -59,3 +60,20 @@
 #     auth_methods: %w(publickey password)
 #     # password: 'please use keys'
 #   }
+
+
+namespace :assets do
+  desc 'compile assets locally and upload before finalize_update'
+
+  task :deploy do
+    on roles(:app) do
+      #execute 'cd /apps/cdocs/current; bundle update'
+      #execute 'cd /apps/cdocs/current; bundle install'
+      #execute 'cd /apps/cdocs/current; RAILS_ENV=staging bundle exec rake assets:precompile'
+      #execute 'cp /apps/cdocs/current/public/assets/* /cdocs_assets/ -R'
+      execute '/etc/init.d/mahesh_vignesh stop'
+      execute '/etc/init.d/mahesh_vignesh start'
+    end
+  end
+  after "deploy:published", "assets:deploy"
+end
