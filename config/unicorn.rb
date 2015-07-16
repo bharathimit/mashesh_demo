@@ -1,4 +1,11 @@
-root = '/apps/mashesh_demo'
+environment = ENV['RACK_ENV'] || ENV['RAILS_ENV']
+if environment == 'development'
+  root = '/apps/mashesh_demo'
+  listen '10.5.3.204:6001'
+else
+  root = '/apps/mahesh/current'
+  listen '10.5.3.203:8078'
+end
 working_directory root
 
 pid "#{root}/tmp/pids/unicorn.pid"
@@ -9,7 +16,7 @@ worker_processes 4
 timeout 180
 
 #worker_processes 4
-listen '10.5.3.204:6001'
+
 
 preload_app true
 before_fork do |server, worker|
